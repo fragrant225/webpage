@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플래너</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .planner {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        .entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .entry span {
+            width: 50px;
+            text-align: right;
+            margin-right: 10px;
+        }
+.entry input {
+    flex: 1;
+}
+</style>
+</head>
+<body>
+<div class="planner">
+<h1 id="date"></h1>
+<div id="entries"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date();
+    const days = ["日", "月", "火", "水", "木", "金", "土"];
+    
+    const year = today.getFullYear() + "年";
+    const month = (today.getMonth() + 1) + "月";
+    const day = today.getDate() + "日";
+    const weekday = days[today.getDay()];
+
+    document.getElementById("date").textContent = `${year} ${month} ${day} (${weekday})`;
+    loadEntries();
+});
+
+function loadEntries() {
+    const entriesDiv = document.getElementById("entries");
+    entriesDiv.innerHTML = "";
+    for (let hour = 0; hour <= 23; hour++) {
+        const savedText = localStorage.getItem(`entry-${hour}`) || "";
+        entriesDiv.innerHTML += `
+            <div class="entry">
+                <span>${hour}:00</span>
+                <input type="text" value="${savedText}" oninput="saveEntry(${hour}, this.value)">
+            </div>
+        `;
+    }
+}
+
+function saveEntry(hour, text) {
+    localStorage.setItem(`entry-${hour}`, text);
+}
+</script>
+</body>
+</html>
